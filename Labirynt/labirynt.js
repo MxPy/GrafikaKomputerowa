@@ -80,6 +80,12 @@ function startGL()
   
   //Opis sceny 3D, położenie punktów w przestrzeni 3D w formacie X,Y,Z 
   let vertexPosition = [
+  //floor
+  -20.0, -1.0, +20.0,  -20.0, -1.0, -20.0,  +20.0, -1.0, +20.0,
+  +20.0, -1.0, +20.0,  -20.0, -1.0, -20.0,  +20.0, -1.0, -20.0,
+
+
+
   //Top
     -1.0, +1.0, -1.0,  -1.0, +1.0, +1.0,  +1.0, +1.0, +1.0, //3 punkty po 3 składowe - X1,Y1,Z1, X2,Y2,Z2, X3,Y3,Z3 - 1 trójkąt
     -1.0, +1.0, -1.0,  +1.0, +1.0, +1.0,  +1.0, +1.0, -1.0,
@@ -104,10 +110,13 @@ function startGL()
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPosition), gl.STATIC_DRAW);
   vertexPositionBuffer.itemSize = 3; //zdefiniowanie liczby współrzednych per wierzchołek
-  vertexPositionBuffer.numItems = 12; //Zdefinoiowanie liczby punktów w naszym buforze
+  vertexPositionBuffer.numItems = 14; //Zdefinoiowanie liczby punktów w naszym buforze
   
   //Opis sceny 3D, kolor każdego z wierzchołków
   let vertexColor = [
+    0.0, 1.0, 1.0,  0.0, 1.0, 1.0,  0.0, 1.0, 1.0,
+    0.0, 1.0, 1.0,  0.0, 1.0, 1.0,  0.0, 1.0, 1.0,
+
   //Top
     1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  1.0, 0.0, 0.0, //3 punkty po 3 składowe - R1,G1,B1, R2,G2,B2, R3,G3,B3 - 1 trójkąt
     1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  1.0, 0.0, 0.0,
@@ -131,7 +140,7 @@ function startGL()
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColor), gl.STATIC_DRAW);
   vertexColorBuffer.itemSize = 3;
-  vertexColorBuffer.numItems = 12;
+  vertexColorBuffer.numItems = 14;
   
   
   //Macierze opisujące położenie wirtualnej kamery w przestrzenie 3D
@@ -155,7 +164,8 @@ var angleX = 0.0;
 var trackAngleY = 0.0;
 var alpha = 0.0;
 var tx = 0.0;
-var tz = -5.0;
+var tz = -20.0;
+var ty = 0.0;
 
 function Tick()
 {  
@@ -194,7 +204,7 @@ function Tick()
   1,0,0,0,
   0,1,0,0,
   0,0,1,0,
-  tx,0,tz,1
+  tx,ty,tz,1
   ];
 
   uPMatrix = MatrixMul(uMVRotX,uPMatrix);
@@ -235,6 +245,7 @@ angleX = 0.0;
 }
 function handlekeydown(e)
 {
+
  if(e.keyCode==68){
   angleY=angleY+1.0; //D
 
@@ -256,6 +267,13 @@ function handlekeydown(e)
  if(e.keyCode==83){
   tx = tx + (0.25 * Math.sin(trackAngleY*Math.PI/180.0))
   tz = tz - (0.25 * Math.cos(trackAngleY*Math.PI/180.0))
+ } 
+
+ if(e.keyCode==73){
+  angleX=angleX+1.0; //D
+ } 
+ if(e.keyCode==75){
+  angleX=angleX-1.0; //A
  } 
  //alert(e.keyCode);
  //alert(angleX);
