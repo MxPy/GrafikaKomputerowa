@@ -85,7 +85,7 @@ function PlaceCube(x,y,z, cub){
 
 function startGL() 
 {
-  //alert("StartGL");
+  alert("W moim programie przygotowałem dwa schematy sterowania, przłączać się między nimi można przyciskiem F\n\n Domyślnie schemat A (w stylu gier FPS):\nObrót kamery: przyciski A i D\n poruszanie się w lini którą jest zwrócona kamera: przyciski W i S\n\n schemat B:\n Obrót kamery: W, S, A, D\n poruszanie się w lini z świata: I i K\n poruszanie się w lini x świata: J i L");
   let canvas = document.getElementById("canvas3D"); //wyszukanie obiektu w strukturze strony 
   gl = canvas.getContext("experimental-webgl"); //pobranie kontekstu OpenGL'u z obiektu canvas
   gl.viewportWidth = canvas.width; //przypisanie wybranej przez nas rozdzielczości do systemu OpenGL
@@ -146,6 +146,10 @@ function startGL()
     ]
 
   }
+
+  //mapa labiryntu
+  //# -> ściana
+  //- -> wolna przestrzeń
   let labirynth = [ "#####-##############",
                     "#---#--#-------##--#",
                     "#-####-#-#####----##",
@@ -162,11 +166,12 @@ function startGL()
                     "#-#-#-##-#########-#",
                     "#-#-#--#-------#---#",
                     "#-#-####-####-###-##",
-                    "#-#-------#-#--#---#",
+                    "#-#-------#----#---#",
                     "#-####-####-#-####-#",
                     "#----#------#------#",
-                    "#############-######" ]
+                    "##########-#########" ]
 
+  //pentle generujące labirynt na bazie mapy
   for(let i = -10; i < 10; i++){
     for(let j = -10; j< 10; j++){
       if(labirynth[i+10][j+10] === "#"){
@@ -303,38 +308,67 @@ angleY = 0.0;
 angleX = 0.0;
 
 }
+
+var keyScheme = 1;
 function handlekeydown(e)
 {
+  if(keyScheme === 1){
+    if(e.keyCode==68){
+      angleY=angleY+2.0; //D
+    
+      trackAngleY=trackAngleY+2.0;
+     } 
+     if(e.keyCode==65){
+      angleY=angleY-2.0; //A
+    
+      trackAngleY=trackAngleY-2.0;
+     } 
+     if(e.keyCode==81) angleZ=angleZ+1.0;
+     if(e.keyCode==69) angleZ=angleZ-1.0;
+     if(e.keyCode==87){
+      tx = tx - (0.5 * Math.sin(trackAngleY*Math.PI/180.0))
+      tz = tz + (0.5 * Math.cos(trackAngleY*Math.PI/180.0))
+      console.log("tx: " + tx);
+      console.log("tz: " + tz);
+     } 
+     if(e.keyCode==83){
+      tx = tx + (0.5 * Math.sin(trackAngleY*Math.PI/180.0))
+      tz = tz - (0.5 * Math.cos(trackAngleY*Math.PI/180.0))
+     } 
+    
+     if(e.keyCode==73){
+      angleX=angleX+1.0; //I
+     } 
+     if(e.keyCode==75){
+      angleX=angleX-1.0; //J
+     } 
+     if(e.keyCode==70){
+      keyScheme = 0;
+      alert("schemat sterowania B")
+      return;
+     } 
+    }
 
- if(e.keyCode==68){
-  angleY=angleY+2.0; //D
+    if(keyScheme === 0){
+    
+      if(e.keyCode==68) angleY=angleY+1.0;
+      if(e.keyCode==65) angleY=angleY-1.0;
+      if(e.keyCode==81) angleZ=angleZ+1.0;
+      if(e.keyCode==69) angleZ=angleZ-1.0;
+      if(e.keyCode==87) angleX=angleX+1.0;
+      if(e.keyCode==83) angleX=angleX-1.0;
+      if(e.keyCode==73) tz+=1;
+      if(e.keyCode==75) tz-=1;
+      if(e.keyCode==74) tx+=1;
+      if(e.keyCode==76) tx-=1;
 
-  trackAngleY=trackAngleY+2.0;
- } 
- if(e.keyCode==65){
-  angleY=angleY-2.0; //A
+       if(e.keyCode==70){
+        keyScheme = 1;
+        alert("schemat sterowania A")
+       } 
+      }
 
-  trackAngleY=trackAngleY-2.0;
- } 
- if(e.keyCode==81) angleZ=angleZ+1.0;
- if(e.keyCode==69) angleZ=angleZ-1.0;
- if(e.keyCode==87){
-  tx = tx - (0.5 * Math.sin(trackAngleY*Math.PI/180.0))
-  tz = tz + (0.5 * Math.cos(trackAngleY*Math.PI/180.0))
-  console.log("tx: " + tx);
-  console.log("tz: " + tz);
- } 
- if(e.keyCode==83){
-  tx = tx + (0.5 * Math.sin(trackAngleY*Math.PI/180.0))
-  tz = tz - (0.5 * Math.cos(trackAngleY*Math.PI/180.0))
- } 
-
- if(e.keyCode==73){
-  angleX=angleX+1.0; //D
- } 
- if(e.keyCode==75){
-  angleX=angleX-1.0; //A
- } 
+ 
  //alert(e.keyCode);
  //alert(angleX);
 }
